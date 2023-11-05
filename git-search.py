@@ -1,5 +1,6 @@
 import os
 import configparser
+import subprocess
 
 def find_git_repositories(start_path='/'):
     git_repositories = []
@@ -9,6 +10,24 @@ def find_git_repositories(start_path='/'):
             git_repositories.append(os.path.abspath(os.path.join(dirpath)))
 
     return git_repositories
+
+
+def is_directory_committed(directory_path):
+    # Run "git status" to check the status of the directory
+    cmd = ["git", "status", "--porcelain", "--", directory_path]
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, text=True)
+
+    print(result)
+    # Check the output to determine if the directory is committed or not
+    if result.returncode == 0:
+        status_output = result.stdout.strip()
+        if status_output == "":
+            return "The directory is clean and has no uncommitted changes."
+        else:
+            return "The directory has uncommitted changes."
+    else:
+        return "Error: Git command failed."
+
 
 
 if __name__ == "__main__":
@@ -27,7 +46,10 @@ if __name__ == "__main__":
             url = config.get("remote \"origin\"", "url")
             if "surajn222" in url:
                 print(git_directory)
+                result = is_directory_committed(git_directory)
 
 
     else:
         print("No Git repositories found.")
+
+
