@@ -1,0 +1,13 @@
+Configure SSH Key with Github
+
+1. ssh-keygen -o -t rsa -C surajn222@gmail.com
+    id_rsa_surajn222
+2. cat id_rsa_surajn222.pub
+3. Upload to github
+4. eval "$(ssh-agent -s)"
+5. ssh-add --apple-use-keychain ~/.ssh/id_rsa_surajn222
+6. vim ~/.ssh/config
+    Host *
+      AddKeysToAgent yes
+      UseKeychain yes
+      IdentityFile ~/.ssh/id_rsa_surajn222
